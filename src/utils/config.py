@@ -11,12 +11,12 @@ class Config:
     """Configuration class for managing API keys and settings."""
     
     # API Keys
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
     ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
     DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY", "")
     
     # Model Configuration
-    OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
+    GROQ_MODEL = os.getenv("GROQ_MODEL", "mixtral-8x7b-32768")
     TEMPERATURE = float(os.getenv("TEMPERATURE", "0.7"))
     
     # Paths
@@ -34,16 +34,16 @@ class Config:
     @classmethod
     def validate(cls):
         """Validate that required API keys are set."""
-        if not cls.OPENAI_API_KEY:
-            print("WARNING: OPENAI_API_KEY not set. LLM features will not work.")
+        if not cls.GROQ_API_KEY:
+            print("WARNING: GROQ_API_KEY not set. LLM features will not work.")
             return False
         return True
     
     @classmethod
-    def get_openai_api_key(cls):
-        """Get OpenAI API key with fallback to dummy mode."""
-        if cls.OPENAI_API_KEY:
-            return cls.OPENAI_API_KEY
+    def get_groq_api_key(cls):
+        """Get Groq API key with fallback to dummy mode."""
+        if cls.GROQ_API_KEY:
+            return cls.GROQ_API_KEY
         print("Using dummy mode - no API key provided")
         return "dummy_key_for_testing"
 

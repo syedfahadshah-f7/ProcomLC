@@ -12,7 +12,7 @@ Competition Requirements:
 import os
 import json
 from typing import List, Dict, Optional
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 try:
     from langchain_core.prompts import PromptTemplate
     from langchain_classic.chains import LLMChain
@@ -40,25 +40,25 @@ from utils.config import Config
 class AudioIntelligencePipeline:
     """Pipeline for processing audio files and extracting information."""
     
-    def __init__(self, openai_api_key: Optional[str] = None):
+    def __init__(self, groq_api_key: Optional[str] = None):
         """
         Initialize the audio intelligence pipeline.
         
         Args:
-            openai_api_key: OpenAI API key for LLM reasoning
+            groq_api_key: Groq API key for LLM reasoning
         """
-        self.api_key = openai_api_key or Config.get_openai_api_key()
+        self.api_key = groq_api_key or Config.get_groq_api_key()
         
         # Initialize LLM for question answering
         if self.api_key and self.api_key != "dummy_key_for_testing":
-            self.llm = ChatOpenAI(
-                model=Config.OPENAI_MODEL,
+            self.llm = ChatGroq(
+                model=Config.GROQ_MODEL,
                 temperature=Config.TEMPERATURE,
-                openai_api_key=self.api_key
+                groq_api_key=self.api_key
             )
         else:
             self.llm = None
-            print("WARNING: Running in dummy mode. Set OPENAI_API_KEY for actual LLM processing.")
+            print("WARNING: Running in dummy mode. Set GROQ_API_KEY for actual LLM processing.")
         
         # For actual Whisper model (uncomment when ready)
         # self.whisper_model = whisper.load_model("base")

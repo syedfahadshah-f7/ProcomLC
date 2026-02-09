@@ -1,0 +1,16 @@
+
+        Security System Voice Log (CASE B)
+        Date: March 9th, 2026, 9:31 PM
+        
+        Access Granted: User Victor Krum.
+        Location: Secure Robotics Lab.
+        Method: Keycard + Pin.
+        
+        ... [Silence for 15 minutes] ...
+        
+        Audio Sensor Triggered: High Decibel Impact Detected.
+        Glass Break Sensor: Triggered.
+        
+        9:46 PM: Exit Detected. User: Victor Krum.
+        Door Left Ajar Alarm.
+        

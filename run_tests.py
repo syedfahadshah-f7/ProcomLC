@@ -9,7 +9,7 @@ import sys
 # Add src to path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
-from utils.config import Config
+from src.utils.config import Config
 
 
 def main():
@@ -25,7 +25,7 @@ def main():
     
     print("\n1.1 Generating audio files...")
     try:
-        from stage1_audio.audio_generator import AudioGenerator
+        from src.stage1_audio.audio_generator import AudioGenerator
         AudioGenerator().generate_mystery_case_audio()
         print("✓ Audio files generated")
     except Exception as e:
@@ -34,7 +34,7 @@ def main():
     
     print("\n1.2 Generating investigation dossier...")
     try:
-        from stage2_documents.dummy_dossier_generator import DossierGenerator
+        from src.stage2_documents.dummy_dossier_generator import DossierGenerator
         DossierGenerator().generate_investigation_dossier()
         print("✓ Dossier generated")
     except Exception as e:
@@ -43,7 +43,7 @@ def main():
     
     print("\n1.3 Generating case files...")
     try:
-        from stage3_reasoning.case_generator import CaseGenerator
+        from src.stage3_reasoning.case_generator import CaseGenerator
         CaseGenerator().generate_additional_evidence()
         print("✓ Case files generated")
     except Exception as e:
@@ -56,7 +56,7 @@ def main():
     print("-"*80)
     
     try:
-        from stage1_audio.stage1_audio_pipeline import AudioIntelligencePipeline
+        from src.stage1_audio.stage1_audio_pipeline import AudioIntelligencePipeline
         
         pipeline = AudioIntelligencePipeline()
         questions = [
@@ -89,7 +89,7 @@ def main():
     print("-"*80)
     
     try:
-        from stage2_documents.stage2_document_pipeline import DocumentForensicsPipeline
+        from src.stage2_documents.stage2_document_pipeline import DocumentForensicsPipeline
         import json
         
         pipeline = DocumentForensicsPipeline()
@@ -119,7 +119,7 @@ def main():
     print("-"*80)
     
     try:
-        from stage3_reasoning.stage3_reasoning_pipeline import CaseReasoningPipeline
+        from src.stage3_reasoning.stage3_reasoning_pipeline import CaseReasoningPipeline
         import json
         
         # Load previous results

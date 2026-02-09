@@ -30,9 +30,9 @@ def init_pipelines(api_key=None):
     """Initialize all pipelines with API key."""
     global audio_pipeline, document_pipeline, reasoning_pipeline
     
-    audio_pipeline = AudioIntelligencePipeline(openai_api_key=api_key)
-    document_pipeline = DocumentForensicsPipeline(openai_api_key=api_key)
-    reasoning_pipeline = CaseReasoningPipeline(openai_api_key=api_key)
+    audio_pipeline = AudioIntelligencePipeline(groq_api_key=api_key)
+    document_pipeline = DocumentForensicsPipeline(groq_api_key=api_key)
+    reasoning_pipeline = CaseReasoningPipeline(groq_api_key=api_key)
     
     print("✓ All pipelines initialized")
 
@@ -193,7 +193,7 @@ HTML_TEMPLATE = """
 @app.route('/')
 def index():
     """Home page with web interface."""
-    api_key = Config.OPENAI_API_KEY
+    api_key = Config.GROQ_API_KEY
     return render_template_string(HTML_TEMPLATE, api_key=api_key)
 
 
@@ -396,7 +396,7 @@ def health():
     return jsonify({
         "status": "healthy",
         "pipelines_initialized": all([audio_pipeline, document_pipeline, reasoning_pipeline]),
-        "api_key_configured": bool(Config.OPENAI_API_KEY and Config.OPENAI_API_KEY != "dummy_key_for_testing")
+        "api_key_configured": bool(Config.GROQ_API_KEY and Config.GROQ_API_KEY != "dummy_key_for_testing")
     })
 
 
@@ -413,7 +413,7 @@ if __name__ == '__main__':
         print("✓ Configuration valid - API key configured")
     else:
         print("⚠ Warning: Running in demo mode without API key")
-        print("  Set OPENAI_API_KEY in .env file for full functionality")
+        print("  Set GROQ_API_KEY in .env file for full functionality")
     
     print(f"\n🚀 Server running at: http://localhost:5000")
     print("   Open this URL in your browser to access the web interface\n")

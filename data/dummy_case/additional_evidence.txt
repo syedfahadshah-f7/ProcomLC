@@ -1,0 +1,68 @@
+
+═══════════════════════════════════════════════════════════════════════════════
+                        ADDITIONAL CASE EVIDENCE
+                           Case #2026-0310-ROBOTICS-02
+                          Final Investigation Summary
+═══════════════════════════════════════════════════════════════════════════════
+
+UPDATED FORENSIC REPORTS
+────────────────────────────────────────────────────────────────────────────────
+
+Lab Analysis - Fiber Match:
+- The red wool fibers found on the crowbar are a 100% match to the hoodie owned
+  by Victor Krum.
+- Traces of robot hydraulic fluid were found on Victor Krum's shoes.
+
+Digital Recovery:
+- IT Forensics recovered a deleted email draft from Victor Krum's personal account:
+  "To: J.Doe@CyberDynamics.com
+   Subject: It's done. 
+   Body: The Apex unit is offline. Permanently. Transfer the rest of the funds."
+
+- Intern Kevin Miller's server activity was fully audited. He was indeed mining
+  Dogecoin. While a policy violation, this had no impact on the robot itself.
+
+
+WITNESS CLARIFICATION
+────────────────────────────────────────────────────────────────────────────────
+
+Janitor (Follow-up):
+- Confirmed the height and build of the person in the red hoodie matches Victor Krum.
+- Did NOT see anyone else enter or exit the lab during that time.
+
+Elena Rostova (Lead Engineer):
+- Provided alibi: Was at a dinner with investors from 8:00 PM to 11:00 PM.
+  Verified by 3 witnesses and restaurant receipts.
+
+
+FINAL SUSPECT EVALUATION
+────────────────────────────────────────────────────────────────────────────────
+
+Victor Krum:
+✓ MOTIVE: Corporate Sabotage / Financial Gain ($500k transfer + bonus).
+✓ OPPORTUNITY: Keycard access, present at scene, disabled cameras.
+✓ MEANS: Technical knowledge to disable bots, physical strength to smash it.
+✓ EVIDENCE: Fingerprints, Fiber match, Deleted Email Confession.
+
+Elena Rostova:
+✗ ALIBI: Confirmed at dinner during incident.
+- Motive was frustration, but no evidence of intent to destroy.
+
+Kevin Miller:
+- Unauthorized computer usage confirmed (Crypto mining).
+- No physical link to the destruction.
+- Alibi: Was in the server room (verified by logs), not the main lab.
+
+
+DETECTIVE'S CONCLUSION
+────────────────────────────────────────────────────────────────────────────────
+
+Prime Suspect: Victor Krum
+Charges:
+1. Industrial Sabotage (Class A Felony)
+2. Destruction of Property (Over $10M)
+3. Corporate Espionage
+
+Status: Arrest Warrant Issued.
+
+═══════════════════════════════════════════════════════════════════════════════

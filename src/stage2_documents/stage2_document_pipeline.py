@@ -14,13 +14,13 @@ import os
 import json
 from typing import List, Dict, Optional
 try:
-    from langchain_openai import ChatOpenAI
+    from langchain_groq import ChatGroq
     from langchain_core.prompts import PromptTemplate
     from langchain_classic.chains import LLMChain
     from langchain_classic.chains.combine_documents import create_stuff_documents_chain
     from langchain_core.documents import Document
 except ImportError:
-    ChatOpenAI = None
+    ChatGroq = None
     PromptTemplate = None
     LLMChain = None
     create_stuff_documents_chain = None
@@ -36,25 +36,25 @@ from utils.config import Config
 class DocumentForensicsPipeline:
     """Pipeline for analyzing documents and extracting forensic information."""
     
-    def __init__(self, openai_api_key: Optional[str] = None):
+    def __init__(self, groq_api_key: Optional[str] = None):
         """
         Initialize the document forensics pipeline.
         
         Args:
-            openai_api_key: OpenAI API key for LLM processing
+            groq_api_key: Groq API key for LLM processing
         """
-        self.api_key = openai_api_key or Config.get_openai_api_key()
+        self.api_key = groq_api_key or Config.get_groq_api_key()
         
         # Initialize LLM
         if self.api_key and self.api_key != "dummy_key_for_testing":
-            self.llm = ChatOpenAI(
-                model=Config.OPENAI_MODEL,
+            self.llm = ChatGroq(
+                model=Config.GROQ_MODEL,
                 temperature=Config.TEMPERATURE,
-                openai_api_key=self.api_key
+                groq_api_key=self.api_key
             )
         else:
             self.llm = None
-            print("WARNING: Running in dummy mode. Set OPENAI_API_KEY for actual LLM processing.")
+            print("WARNING: Running in dummy mode. Set GROQ_API_KEY for actual LLM processing.")
     
     def load_document(self, file_path: str) -> str:
         """

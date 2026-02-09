@@ -103,7 +103,7 @@ class RigorousTester:
                 print(f"  [OK] SUCCESS: Correctly identified {expected_culprit}")
                 return True
             else:
-                if not Config.OPENAI_API_KEY:
+                if not Config.GROQ_API_KEY:
                     print(f"  [WARN] NOTE: Running in Dummy Mode. Logic might be static.")
                     if "Sarah Chen" in final_conclusion and scenario == "B":
                          print(f"  (Expected behavior for static dummy logic -> Scenario B requires real LLM or updated dummy logic)")

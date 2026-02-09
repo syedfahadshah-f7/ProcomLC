@@ -1,0 +1,88 @@
+
+═══════════════════════════════════════════════════════════════════════════════
+                        CONFIDENTIAL INVESTIGATION DOSSIER
+                           Case #2026-0310-ROBOTICS-02
+                        Corporate Sabotage - Apex Prototype
+═══════════════════════════════════════════════════════════════════════════════
+
+PAGE 1: INCIDENT REPORT
+────────────────────────────────────────────────────────────────────────────────
+
+Date: March 10, 2026
+Location: Secure Robotics Lab 4, TechWing
+Incident: Destruction of 'Apex' Humanoid Robot Prototype
+Discovery: 7:00 AM by CEO Marcus Thorne
+
+Summary:
+The Apex prototype, valued at $12M, was found destroyed. The central processing
+unit was smashed, and servo motors were manually ripped out.
+There are no signs of forced entry at the main door.
+Access logs show entry by authorized personnel only.
+
+Suspects:
+1. Elena Rostova (Lead Engineer)
+2. Kevin Miller (Intern)
+3. Victor Krum (Senior Developer, recently hired from competitor)
+
+
+PAGE 2: PERSONNEL PROFILES
+────────────────────────────────────────────────────────────────────────────────
+
+Elena Rostova
+- Role: Lead Engineer
+- History: Project lead for 2 years. Very passionate.
+- Notes: Recently expressed extreme frustration with deadlines.
+- Access: Full Lab Access.
+
+Kevin Miller
+- Role: Engineering Intern
+- History: 6 months internship.
+- Notes: Caught running unauthorized AI simulations on the main server. 
+  He was using the supercomputer to mine crypto-currency and train a personal 
+  chatbot. He has been reprimanded twice for unauthorized experiments.
+- Access: Basic Lab Access.
+
+Victor Krum
+- Role: Senior Developer
+- History: Hired 2 weeks ago from 'CyberDynamics' (Main Competitor).
+- Notes: Financial background check reveals suspicious large deposits.
+- Access: Full Lab Access.
+
+
+PAGE 3: SYSTEM LOGS & FINANCIALS
+────────────────────────────────────────────────────────────────────────────────
+
+System Log Access Analysis:
+- Victor Krum: Accessed the main security server logs at 9:15 PM and 10:00 PM.
+  He deleted 10 minutes of camera footage.
+- Kevin Miller: Accessed the simulation server logs to hide his crypto-mining tracks.
+
+Financial Record Analysis:
+- Victor Krum: Accessed the company payroll and financial records to verify his own
+  bonus structure.
+- Suspicious Activity: Victor Krum received a wire transfer of $500,000 from
+  'CD Holdings' (Shell company of CyberDynamics) on March 9th.
+
+
+PAGE 4: FORENSIC DETAILS
+────────────────────────────────────────────────────────────────────────────────
+
+Fingerprints:
+- Found on the smashed CPU: Victor Krum (partial thumbprint).
+- Found on the door handle: Elena, Kevin, Victor (expected).
+
+Tool Marks:
+- The crowbar used to smash the prototype belongs to the janitorial closet.
+- Traces of 'Red Wool' fibers found on the crowbar handle.
+
+Security Anomalies:
+- 9:30 PM: Victor Krum enters lab.
+- 9:45 PM: Loud noise detected (Glass Break Sensor).
+- 9:46 PM: Victor Krum exits lab.
+- 10:00 PM: Logs accessed and footage deleted by Victor Krum.
+- Intern Kevin Miller's unauthorized experiments were running on background servers
+  during the incident, causing high CPU usage but no physical damage.
+
+═══════════════════════════════════════════════════════════════════════════════
+                                END OF DOSSIER
+═══════════════════════════════════════════════════════════════════════════════
