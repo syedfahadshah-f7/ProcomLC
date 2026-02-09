@@ -1,0 +1,14 @@
+
+        CEO Interview - Marcus Thorne (CASE B)
+        Date: March 10th, 2026, 8:00 AM
+        
+        I arrived at the Robotics Lab at 7 AM to check on the 'Apex' prototype before the investor demo.
+        I found the prototype completely destroyed. The main CPU was smashed, and the servo motors were
+        ripped out.
+        
+        Only three people had access codes to the lab last night: Lead Engineer Elena Rostova, 
+        Intern Kevin Miller, and our competitor's former employee who we just hired, Victor Krum.
+        
+        I know Elena was furious about the project timeline. She said it was 'impossible' to finish.
+        But destroying her own work? I don't know.
+        

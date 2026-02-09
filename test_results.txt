@@ -1,0 +1,153 @@
+﻿Starting Rigorous Testing Suite...
+
+================================================================================
+TESTING SCENARIO A: The Poisoned Researcher
+================================================================================
+  Cleaning data directories...
+  Generating data for Scenario A...
+
+Generating Stage 1 Audio Files (Scenario A)...
+================================================================================
+
+Γ£ô Generated audio: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio1_security_interview.mp3
+Γ£ô Saved transcript: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio1_security_interview_transcript.txt
+Γ£ô Generated audio: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio2_lab_assistant.mp3
+Γ£ô Saved transcript: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio2_lab_assistant_transcript.txt
+Γ£ô Generated audio: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio3_witness_account.mp3
+Γ£ô Saved transcript: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio3_witness_account_transcript.txt
+Γ£ô Generated audio: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio4_emergency_call.mp3
+Γ£ô Saved transcript: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio4_emergency_call_transcript.txt
+
+Γ£ô All Scenario A audio files generated successfully!
+  Pages: 8
+Γ£ô Generated investigation dossier: D:\Sem 6\ProcomLangchain\data\dummy_documents\investigation_dossier.txt
+  Length: 9797 characters
+Γ£ô Generated additional evidence: D:\Sem 6\ProcomLangchain\data\dummy_case\additional_evidence.txt
+
+  Running Stage 1: Audio Intelligence...
+Processing audio file: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio3_witness_account.mp3
+Deepgram SDK not installed or API key missing.
+Transcription complete. Length: 1001 characters
+Error answering question 'Who is mentioned in this audio recording?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What suspicious activity is described?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What evidence is presented?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Processing audio file: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio4_emergency_call.mp3
+Deepgram SDK not installed or API key missing.
+Transcription complete. Length: 1089 characters
+Error answering question 'Who is mentioned in this audio recording?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What suspicious activity is described?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What evidence is presented?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+
+  Running Stage 2: Document Forensics...
+Analyzing dossier: D:\Sem 6\ProcomLangchain\data\dummy_documents\investigation_dossier.txt
+Document loaded. Length: 9797 characters
+Error extracting system log access: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error extracting financial access: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error extracting unauthorized experiments: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+
+  Running Stage 3: Final Reasoning...
+================================================================================
+STAGE 3: FINAL CASE RESOLUTION - REASONING CHAIN
+================================================================================
+
+Step 0: Aggregating all evidence...
+Step 1: Identifying suspects...
+Error identifying suspects: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Step 2: Analyzing motives...
+Error analyzing motives: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Step 3: Analyzing opportunity...
+Error analyzing opportunity: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Step 4: Analyzing means...
+Error analyzing means: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Step 5: Making final determination...
+Error determining culprit: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+
+  Verifying Results...
+  > AI Conclusion: Error in final determination...
+  Γ£ù FAILURE: Expected Sarah Chen, but got mismatch.
+
+================================================================================
+TESTING SCENARIO B: The Sabotaged Prototype (New Dataset)
+================================================================================
+  Cleaning data directories...
+  Generating data for Scenario B...
+
+Generating Stage 1 Audio Files (Scenario B)...
+================================================================================
+
+Γ£ô Generated audio: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio1_ceo_interview.mp3
+Γ£ô Saved transcript: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio1_ceo_interview_transcript.txt
+Γ£ô Generated audio: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio2_intern_statement.mp3
+Γ£ô Saved transcript: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio2_intern_statement_transcript.txt
+Γ£ô Generated audio: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio3_janitor_witness.mp3
+Γ£ô Saved transcript: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio3_janitor_witness_transcript.txt
+Γ£ô Generated audio: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio4_security_log.mp3
+Γ£ô Saved transcript: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio4_security_log_transcript.txt
+
+Γ£ô All Scenario B audio files generated successfully!
+Location: D:\Sem 6\ProcomLangchain\data\dummy_audio
+  Pages: 8
+Γ£ô Generated investigation dossier: D:\Sem 6\ProcomLangchain\data\dummy_documents\investigation_dossier.txt
+  Length: 3400 characters
+Γ£ô Generated additional evidence: D:\Sem 6\ProcomLangchain\data\dummy_case\additional_evidence.txt
+
+  Running Stage 1: Audio Intelligence...
+Processing audio file: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio1_ceo_interview.mp3
+Deepgram SDK not installed or API key missing.
+Transcription complete. Length: 698 characters
+Error answering question 'Who is mentioned in this audio recording?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What suspicious activity is described?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What evidence is presented?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Processing audio file: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio2_intern_statement.mp3
+Deepgram SDK not installed or API key missing.
+Transcription complete. Length: 594 characters
+Error answering question 'Who is mentioned in this audio recording?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What suspicious activity is described?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What evidence is presented?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Processing audio file: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio3_janitor_witness.mp3
+Deepgram SDK not installed or API key missing.
+Transcription complete. Length: 570 characters
+Error answering question 'Who is mentioned in this audio recording?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What suspicious activity is described?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What evidence is presented?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Processing audio file: D:\Sem 6\ProcomLangchain\data\dummy_audio\audio4_security_log.mp3
+Deepgram SDK not installed or API key missing.
+Transcription complete. Length: 462 characters
+Error answering question 'Who is mentioned in this audio recording?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What suspicious activity is described?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error answering question 'What evidence is presented?': Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+
+  Running Stage 2: Document Forensics...
+Analyzing dossier: D:\Sem 6\ProcomLangchain\data\dummy_documents\investigation_dossier.txt
+Document loaded. Length: 3400 characters
+Error extracting system log access: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error extracting financial access: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Error extracting unauthorized experiments: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+
+  Running Stage 3: Final Reasoning...
+================================================================================
+STAGE 3: FINAL CASE RESOLUTION - REASONING CHAIN
+================================================================================
+
+Step 0: Aggregating all evidence...
+Step 1: Identifying suspects...
+Error identifying suspects: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Step 2: Analyzing motives...
+Error analyzing motives: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Step 3: Analyzing opportunity...
+Error analyzing opportunity: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Step 4: Analyzing means...
+Error analyzing means: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+Step 5: Making final determination...
+Error determining culprit: Error code: 404 - {'error': {'message': 'The model `gpt-4` does not exist or you do not have access to it.', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+
+  Verifying Results...
+  > AI Conclusion: Error in final determination...
+  Γ£ù FAILURE: Expected Victor Krum, but got mismatch.
+
+================================================================================
+TEST SUMMARY
+================================================================================
+Scenario A: FAIL
+Scenario B: FAIL
+================================================================================

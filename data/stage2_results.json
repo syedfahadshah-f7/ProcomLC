@@ -1,0 +1,9 @@
+{
+  "dossier_file": "investigation_dossier.txt",
+  "document_length": 3400,
+  "findings": {
+    "system_log_access": [],
+    "financial_access": [],
+    "unauthorized_experiments": []
+  }
+}

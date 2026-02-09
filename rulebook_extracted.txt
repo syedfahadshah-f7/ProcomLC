@@ -1,0 +1,98 @@
+
+
+--- Page 1 ---
+
++92 316 3677527
+FAST NUCES KARACHI
+Contact Us:
+LANGCHAIN
+MYSTERIES
+11  February, 2026 thAI based investigation competition where
+participants must use Speech-to-Text,
+Document Analysis, and LangChain Reasoning
+to solve a digital case.
+
+--- Page 2 ---
+
+The competition consists of three stages,
+each testing a different AI capability.
+Participants have to bring their own laptops
+Stage 1 → Audio Intelligence
+Stage 2 → Document Forensics
+Stage 3 → Final Reasoning
+Each Stage contains 5–6 auto-graded
+questions.
+No stage can be solved without running the
+required pipeline.
+COMPETITIONSTRUCTURE
+
+
+--- Page 3 ---
+
+Stage 1 – Audio Intelligence
+Participants receive four audio files.
+Using Speech-to-Text + LangChain,
+teams must extract answers to questions.
+Answers are submitted through the
+portal.
+Stage 2 – Document Forensics
+Participants receive a multi-page
+dossier.
+Using LangChain with an LLM, teams must
+extract:
+Who accessed system logs and finances
+Who conducted unauthorized
+experiments
+No embeddings or vector databases are
+allowed.
+Stage 3 – Final Case Resolution
+Participants receive additional
+documents and using a LangChain
+reasoning chain, teams must determine
+the murderer.
+COMPETITIONSTRUCTURE
+
+--- Page 4 ---
+
+Perm itted
+Python
+LangChain
+Whisper / HuggingFace / Deepgram
+GPT-style LLMs (OpenAI / Groq)
+Flask or FastAPI
+Not Perm itted
+OCR tools
+Vector databases or embeddings
+Manual or hard-coded answers
+Unauthorized APIs
+ALLOWEDTECHNOLOGY
+
+--- Page 5 ---
+
+Duration : 3 hours
+Weightage
+1.Stage 1 : 30%
+2.Stage 2 : 30%
+3.Stage 3 : 30%
+4.Code Quality : 10%
+Bonus points 
+1.Modular pipelines
+2.Logical reasoning
+3.Clean documentation
+SCORING AND
+DURATION
+
+--- Page 6 ---
+
+Teams will be disqualified for:
+Hard-coding answers
+Not running actual AI pipelines
+Plagiarism
+Using prohibited tools
+External collaboration
+General Rules:
+Teams must work independently
+No inter-team communication
+Organizers may modify rules if needed
+Violations result in immediate disqualification
+DISQUALIFICATION& GENERAL RULES
