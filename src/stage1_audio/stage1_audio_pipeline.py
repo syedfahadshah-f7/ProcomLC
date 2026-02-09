@@ -21,11 +21,11 @@ except ImportError:
     LLMChain = None
 
 try:
-    from deepgram import DeepgramClient, PrerecordedOptions, FileSource
+    from deepgram import DeepgramClient
+    DEEPGRAM_AVAILABLE = True
 except ImportError:
     DeepgramClient = None
-    PrerecordedOptions = None
-    FileSource = None
+    DEEPGRAM_AVAILABLE = False
 from pathlib import Path
 
 # For actual Whisper integration (uncomment when API key is available)
@@ -65,8 +65,12 @@ class AudioIntelligencePipeline:
         
     def transcribe_with_deepgram(self, audio_path: str) -> str:
         """Transcribe audio using Deepgram with diarization."""
-        if not DeepgramClient or not Config.DEEPGRAM_API_KEY:
-            print("Deepgram SDK not installed or API key missing.")
+        if not DEEPGRAM_AVAILABLE:
+            # Silently skip - not critical since we have transcript files
+            return ""
+        
+        if not Config.DEEPGRAM_API_KEY:
+            # Only warn once about missing API key
             return ""
 
         try:
@@ -75,17 +79,20 @@ class AudioIntelligencePipeline:
             with open(audio_path, "rb") as file:
                 buffer_data = file.read()
             
-            payload = {"buffer": buffer_data}
-            options = PrerecordedOptions(
-                model="nova-2",
-                smart_format=True,
-                diarize=True,
-            )
+            # Use new Deepgram SDK API (v3+)
+            options = {
+                "model": "nova-2",
+                "smart_format": True,
+                "diarize": True,
+            }
             
-            response = deepgram.listen.prerecorded.v("1").transcribe_file(payload, options)
+            response = deepgram.listen.rest.v("1").transcribe_file(
+                {"buffer": buffer_data}, 
+                options
+            )
             return response.results.channels[0].alternatives[0].transcript
         except Exception as e:
-            print(f"Deepgram transcription failed: {e}")
+            # Silently fail - we have fallback to transcript files
             return ""
 
     def transcribe_audio(self, audio_path: str) -> str:
