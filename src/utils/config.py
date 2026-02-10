@@ -16,7 +16,8 @@ class Config:
     DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY", "")
     
     # Model Configuration
-    GROQ_MODEL = os.getenv("GROQ_MODEL", "mixtral-8x7b-32768")
+    GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+    GROQ_MODEL_LARGE = os.getenv("GROQ_MODEL_LARGE", "llama-3.3-70b-versatile")
     TEMPERATURE = float(os.getenv("TEMPERATURE", "0.7"))
     
     # Paths

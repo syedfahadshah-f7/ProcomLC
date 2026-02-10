@@ -11,7 +11,9 @@ Competition Requirements:
 
 import os
 import json
-from typing import List, Dict, Optional
+import hashlib
+import re
+from typing import List, Dict, Optional, Tuple
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 import time
@@ -44,23 +46,37 @@ class AudioIntelligencePipeline:
             groq_api_key: Groq API key for LLM reasoning
         """
         self.api_key = groq_api_key or Config.get_groq_api_key()
+        self.cache = {}  # Transcript hash -> answers cache
+        self.tpd_exhausted = False  # Track if TPD limit hit
         
-        # Initialize LLM for question answering
+        # Initialize small LLM for routine Q&A (token-efficient)
         if self.api_key and self.api_key != "dummy_key_for_testing":
             try:
-                self.llm = ChatGroq(
+                self.llm_small = ChatGroq(
                     model=Config.GROQ_MODEL,
                     temperature=Config.TEMPERATURE,
                     groq_api_key=self.api_key,
-                    timeout=30.0,  # 30 second timeout
-                    max_retries=2  # Retry failed requests
+                    timeout=30.0,
+                    max_retries=0  # We handle retries manually
                 )
-                print(f"✓ LLM initialized with model: {Config.GROQ_MODEL}")
+                print(f"✓ Small LLM initialized: {Config.GROQ_MODEL}")
+                
+                # Initialize large LLM for suspicious/complex cases
+                self.llm_large = ChatGroq(
+                    model=Config.GROQ_MODEL_LARGE,
+                    temperature=Config.TEMPERATURE,
+                    groq_api_key=self.api_key,
+                    timeout=30.0,
+                    max_retries=0
+                )
+                print(f"✓ Large LLM initialized: {Config.GROQ_MODEL_LARGE}")
             except Exception as e:
                 print(f"ERROR initializing LLM: {e}")
-                self.llm = None
+                self.llm_small = None
+                self.llm_large = None
         else:
-            self.llm = None
+            self.llm_small = None
+            self.llm_large = None
             print("WARNING: Running in dummy mode. Set GROQ_API_KEY for actual LLM processing.")
         
         # For actual Whisper model (uncomment when ready)
@@ -126,9 +142,89 @@ class AudioIntelligencePipeline:
         
         return f"[Dummy transcript for {filename}]"
     
+    def _compute_cache_key(self, transcript: str, questions: List[str]) -> str:
+        """Generate cache key from transcript and questions."""
+        content = transcript + "|".join(sorted(questions))
+        return hashlib.md5(content.encode()).hexdigest()
+    
+    def _detect_suspicious_content(self, transcript: str) -> bool:
+        """Detect if transcript contains suspicious/complex content requiring large model."""
+        suspicious_keywords = [
+            "murder", "kill", "death", "crime", "suspicious", "unauthorized",
+            "deleted", "cover", "alibi", "weapon", "evidence", "forensic"
+        ]
+        transcript_lower = transcript.lower()
+        return any(keyword in transcript_lower for keyword in suspicious_keywords)
+    
+    def _extract_retry_after(self, error_msg: str) -> Optional[int]:
+        """Extract retry-after seconds from error message."""
+        # Look for patterns like "retry after 60 seconds" or "rate_limit_reset: 1234567890"
+        match = re.search(r'retry.*?(\d+)\s*seconds?', error_msg, re.IGNORECASE)
+        if match:
+            return int(match.group(1))
+        match = re.search(r'rate_limit_reset.*?(\d{10})', error_msg)
+        if match:
+            reset_time = int(match.group(1))
+            wait_time = reset_time - int(time.time())
+            return max(1, wait_time)
+        return None
+    
+    def _is_tpd_exhaustion(self, error_msg: str) -> bool:
+        """Check if error indicates daily token limit exhaustion."""
+        tpd_indicators = [
+            "daily", "quota", "limit exceeded", "tpd", "tokens per day",
+            "rate_limit_reached", "rate_limit_exceeded"
+        ]
+        error_lower = error_msg.lower()
+        return any(indicator in error_lower for indicator in tpd_indicators)
+    
+    def _call_llm_with_retry(self, chain, params: Dict, max_retries: int = 3) -> Tuple[Optional[str], bool]:
+        """Call LLM with proper retry logic and backoff.
+        
+        Returns:
+            Tuple of (response_content, success_flag)
+        """
+        if self.tpd_exhausted:
+            print("  ⚠ TPD limit already exhausted, skipping LLM call")
+            return None, False
+        
+        for attempt in range(max_retries):
+            try:
+                response = chain.invoke(params)
+                return response.content.strip(), True
+            except Exception as e:
+                error_msg = str(e)
+                
+                # Check for TPD exhaustion
+                if self._is_tpd_exhaustion(error_msg):
+                    print(f"  ⚠ Daily token limit exhausted!")
+                    self.tpd_exhausted = True
+                    return None, False
+                
+                # Check if this is a rate limit (429) error
+                is_429 = "429" in error_msg or "rate" in error_msg.lower()
+                
+                if attempt < max_retries - 1:
+                    # Extract retry-after from error or use exponential backoff
+                    retry_after = self._extract_retry_after(error_msg)
+                    if retry_after:
+                        wait_time = min(retry_after, 60)  # Cap at 60 seconds
+                        print(f"  ⏱ Rate limited. Waiting {wait_time}s (from retry-after)...")
+                    else:
+                        wait_time = min(2 ** attempt, 16)  # Exponential: 1, 2, 4, 8, 16
+                        print(f"  ⏱ Attempt {attempt + 1}/{max_retries} failed. Backing off {wait_time}s...")
+                    
+                    time.sleep(wait_time)
+                else:
+                    print(f"  ✗ All {max_retries} attempts failed: {error_msg[:100]}")
+                    return None, False
+        
+        return None, False
+    
     def answer_questions_from_transcript(self, transcript: str, questions: List[str]) -> Dict[str, str]:
         """
         Extract answers to questions from transcript using LangChain.
+        Uses single batched prompt to minimize token usage and API calls.
         
         Args:
             transcript: Transcribed audio text
@@ -137,60 +233,116 @@ class AudioIntelligencePipeline:
         Returns:
             Dictionary mapping questions to answers
         """
-        # Create a prompt template for question answering
-        qa_template = """You are an expert investigator analyzing audio transcripts from a mystery case.
+        # Check cache first
+        cache_key = self._compute_cache_key(transcript, questions)
+        if cache_key in self.cache:
+            print("  ✓ Using cached answers")
+            return self.cache[cache_key]
         
+        # Use dummy mode if no LLM available
+        if not self.llm_small:
+            print("  No LLM available, using dummy answers.")
+            return self._dummy_answers_all(transcript, questions)
+        
+        # Detect if we need large model for suspicious content
+        use_large_model = self._detect_suspicious_content(transcript)
+        llm = self.llm_large if use_large_model else self.llm_small
+        model_name = Config.GROQ_MODEL_LARGE if use_large_model else Config.GROQ_MODEL
+        
+        if use_large_model:
+            print(f"  🔍 Suspicious content detected, using large model: {model_name}")
+        else:
+            print(f"  💡 Using efficient model: {model_name}")
+        
+        # BATCHED PROMPT: All questions in ONE call to minimize token usage
+        batched_template = """You are an expert investigator analyzing audio transcripts from a mystery case.
+
 Transcript:
 {transcript}
 
-Question: {question}
-
-Based ONLY on the information in the transcript above, provide a clear and concise answer.
+Answer ALL of the following questions based ONLY on the information in the transcript above.
+For each question, provide a clear and concise answer.
 If the answer is not found in the transcript, respond with "Information not found in transcript."
 
-Answer:"""
+Questions:
+{questions}
 
-        answers = {}
+Provide your answers in the following format:
+1. [Answer to question 1]
+2. [Answer to question 2]
+3. [Answer to question 3]
+...
+
+Answers:"""
         
-        if self.llm:
-            try:
-                # Use modern LangChain LCEL pattern (RunnableSequence)
-                prompt = ChatPromptTemplate.from_template(qa_template)
-                chain = prompt | self.llm
-                
-                for question in questions:
-                    retry_count = 0
-                    max_retries = 3
-                    
-                    while retry_count < max_retries:
-                        try:
-                            print(f"  Asking: {question}")
-                            response = chain.invoke({
-                                "transcript": transcript,
-                                "question": question
-                            })
-                            answers[question] = response.content.strip()
-                            print(f"  ✓ Answered")
-                            break
-                        except Exception as e:
-                            retry_count += 1
-                            error_msg = str(e)
-                            print(f"  Attempt {retry_count}/{max_retries} failed: {error_msg}")
-                            
-                            if retry_count < max_retries:
-                                wait_time = retry_count * 2  # Exponential backoff
-                                print(f"  Retrying in {wait_time} seconds...")
-                                time.sleep(wait_time)
-                            else:
-                                print(f"  ✗ All retries failed. Using dummy answer.")
-                                answers[question] = self._dummy_answer(transcript, question)
-            except Exception as e:
-                print(f"ERROR: LLM chain setup failed: {e}")
-                print("Falling back to dummy mode for all questions.")
+        try:
+            # Format questions as numbered list
+            questions_text = "\n".join([f"{i+1}. {q}" for i, q in enumerate(questions)])
+            
+            prompt = ChatPromptTemplate.from_template(batched_template)
+            chain = prompt | llm
+            
+            print(f"  📤 Sending batched prompt with {len(questions)} questions...")
+            response_text, success = self._call_llm_with_retry(
+                chain,
+                {"transcript": transcript, "questions": questions_text},
+                max_retries=3
+            )
+            
+            if not success or not response_text:
+                print("  ⚠ LLM call failed, falling back to dummy answers")
                 return self._dummy_answers_all(transcript, questions)
-        else:
-            print("No LLM available, using dummy answers.")
+            
+            print(f"  ✓ Received batched response")
+            
+            # Parse numbered answers from response
+            answers = self._parse_batched_response(response_text, questions, transcript)
+            
+            # Cache the results
+            self.cache[cache_key] = answers
+            
+            return answers
+            
+        except Exception as e:
+            print(f"  ERROR: Batched prompt failed: {e}")
+            print("  Falling back to dummy mode")
             return self._dummy_answers_all(transcript, questions)
+    
+    def _parse_batched_response(self, response_text: str, questions: List[str], transcript: str) -> Dict[str, str]:
+        """Parse numbered answers from batched LLM response."""
+        answers = {}
+        lines = response_text.strip().split('\n')
+        
+        current_answer = []
+        current_idx = None
+        
+        for line in lines:
+            line = line.strip()
+            # Check if line starts with a number (e.g., "1.", "2)", "3 -")
+            match = re.match(r'^(\d+)[.)\-:]\s*(.*)$', line)
+            if match:
+                # Save previous answer
+                if current_idx is not None and current_answer:
+                    if current_idx <= len(questions):
+                        question = questions[current_idx - 1]
+                        answers[question] = ' '.join(current_answer).strip()
+                
+                # Start new answer
+                current_idx = int(match.group(1))
+                current_answer = [match.group(2)] if match.group(2) else []
+            elif current_idx is not None and line:
+                current_answer.append(line)
+        
+        # Save last answer
+        if current_idx is not None and current_answer:
+            if current_idx <= len(questions):
+                question = questions[current_idx - 1]
+                answers[question] = ' '.join(current_answer).strip()
+        
+        # Fill in any missing answers with dummy responses
+        for question in questions:
+            if question not in answers or not answers[question]:
+                answers[question] = self._dummy_answer(transcript, question)
         
         return answers
 
