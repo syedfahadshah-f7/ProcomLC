@@ -30,6 +30,10 @@ def init_pipelines(api_key=None):
     """Initialize all pipelines with API key."""
     global audio_pipeline, document_pipeline, reasoning_pipeline
     
+    # Use provided key or get from config
+    if api_key is None:
+        api_key = Config.GROQ_API_KEY if Config.GROQ_API_KEY else None
+    
     audio_pipeline = AudioIntelligencePipeline(groq_api_key=api_key)
     document_pipeline = DocumentForensicsPipeline(groq_api_key=api_key)
     reasoning_pipeline = CaseReasoningPipeline(groq_api_key=api_key)

@@ -13,12 +13,8 @@ import os
 import json
 from typing import List, Dict, Optional
 from langchain_groq import ChatGroq
-try:
-    from langchain_core.prompts import PromptTemplate
-    from langchain_classic.chains import LLMChain
-except ImportError:
-    PromptTemplate = None
-    LLMChain = None
+from langchain_core.prompts import ChatPromptTemplate
+import time
 
 try:
     from deepgram import DeepgramClient
@@ -51,11 +47,18 @@ class AudioIntelligencePipeline:
         
         # Initialize LLM for question answering
         if self.api_key and self.api_key != "dummy_key_for_testing":
-            self.llm = ChatGroq(
-                model=Config.GROQ_MODEL,
-                temperature=Config.TEMPERATURE,
-                groq_api_key=self.api_key
-            )
+            try:
+                self.llm = ChatGroq(
+                    model=Config.GROQ_MODEL,
+                    temperature=Config.TEMPERATURE,
+                    groq_api_key=self.api_key,
+                    timeout=30.0,  # 30 second timeout
+                    max_retries=2  # Retry failed requests
+                )
+                print(f"✓ LLM initialized with model: {Config.GROQ_MODEL}")
+            except Exception as e:
+                print(f"ERROR initializing LLM: {e}")
+                self.llm = None
         else:
             self.llm = None
             print("WARNING: Running in dummy mode. Set GROQ_API_KEY for actual LLM processing.")
@@ -147,34 +150,46 @@ If the answer is not found in the transcript, respond with "Information not foun
 
 Answer:"""
 
-
-        
         answers = {}
         
         if self.llm:
-            prompt = PromptTemplate(
-                input_variables=["transcript", "question"],
-                template=qa_template
-            )
-            
             try:
-                # Use actual LLM chain
-                qa_chain = LLMChain(llm=self.llm, prompt=prompt)
+                # Use modern LangChain LCEL pattern (RunnableSequence)
+                prompt = ChatPromptTemplate.from_template(qa_template)
+                chain = prompt | self.llm
                 
                 for question in questions:
-                    try:
-                        response = qa_chain.invoke({
-                            "transcript": transcript,
-                            "question": question
-                        })
-                        answers[question] = response['text'].strip()
-                    except Exception as e:
-                        print(f"LLM Error answering question '{question}': {e}. Falling back to dummy mode.")
-                        answers[question] = self._dummy_answer(transcript, question)
+                    retry_count = 0
+                    max_retries = 3
+                    
+                    while retry_count < max_retries:
+                        try:
+                            print(f"  Asking: {question}")
+                            response = chain.invoke({
+                                "transcript": transcript,
+                                "question": question
+                            })
+                            answers[question] = response.content.strip()
+                            print(f"  ✓ Answered")
+                            break
+                        except Exception as e:
+                            retry_count += 1
+                            error_msg = str(e)
+                            print(f"  Attempt {retry_count}/{max_retries} failed: {error_msg}")
+                            
+                            if retry_count < max_retries:
+                                wait_time = retry_count * 2  # Exponential backoff
+                                print(f"  Retrying in {wait_time} seconds...")
+                                time.sleep(wait_time)
+                            else:
+                                print(f"  ✗ All retries failed. Using dummy answer.")
+                                answers[question] = self._dummy_answer(transcript, question)
             except Exception as e:
-                print(f"LLM Chain initialization failed: {e}. Falling back to dummy mode.")
+                print(f"ERROR: LLM chain setup failed: {e}")
+                print("Falling back to dummy mode for all questions.")
                 return self._dummy_answers_all(transcript, questions)
         else:
+            print("No LLM available, using dummy answers.")
             return self._dummy_answers_all(transcript, questions)
         
         return answers

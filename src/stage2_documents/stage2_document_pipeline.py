@@ -13,18 +13,10 @@ Competition Requirements:
 import os
 import json
 from typing import List, Dict, Optional
-try:
-    from langchain_groq import ChatGroq
-    from langchain_core.prompts import PromptTemplate
-    from langchain_classic.chains import LLMChain
-    from langchain_classic.chains.combine_documents import create_stuff_documents_chain
-    from langchain_core.documents import Document
-except ImportError:
-    ChatGroq = None
-    PromptTemplate = None
-    LLMChain = None
-    create_stuff_documents_chain = None
-    Document = None
+import time
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.documents import Document
 from pathlib import Path
 import PyPDF2
 
@@ -47,11 +39,18 @@ class DocumentForensicsPipeline:
         
         # Initialize LLM
         if self.api_key and self.api_key != "dummy_key_for_testing":
-            self.llm = ChatGroq(
-                model=Config.GROQ_MODEL,
-                temperature=Config.TEMPERATURE,
-                groq_api_key=self.api_key
-            )
+            try:
+                self.llm = ChatGroq(
+                    model=Config.GROQ_MODEL,
+                    temperature=Config.TEMPERATURE,
+                    groq_api_key=self.api_key,
+                    timeout=30.0,
+                    max_retries=2
+                )
+                print(f"✓ Document pipeline LLM initialized: {Config.GROQ_MODEL}")
+            except Exception as e:
+                print(f"ERROR initializing LLM: {e}")
+                self.llm = None
         else:
             self.llm = None
             print("WARNING: Running in dummy mode. Set GROQ_API_KEY for actual LLM processing.")
@@ -125,21 +124,18 @@ Names who accessed system logs:"""
 
         if self.llm:
             try:
-                prompt = PromptTemplate(
-                    input_variables=["document"],
-                    template=prompt_template
-                )
-                chain = LLMChain(llm=self.llm, prompt=prompt)
+                prompt = ChatPromptTemplate.from_template(prompt_template)
+                chain = prompt | self.llm
                 
                 response = chain.invoke({"document": document_text})
-                result = response['text'].strip()
+                result = response.content.strip()
                 
                 # Parse comma-separated names
-                if result.lower() == "none found":
+                if result.lower() == "none found" or not result:
                     return []
                 return [name.strip() for name in result.split(',')]
             except Exception as e:
-                print(f"LLM Error extracting system log access: {e}. Falling back to dummy mode.")
+                print(f"ERROR extracting system log access: {e}. Using dummy mode.")
                 return self._dummy_extract_system_log(document_text)
         else:
             return self._dummy_extract_system_log(document_text)
@@ -181,21 +177,18 @@ Provide your answer as a comma-separated list of names only. If no one is mentio
 Names who accessed financial records:"""
 
         if self.llm:
-            prompt = PromptTemplate(
-                input_variables=["document"],
-                template=prompt_template
-            )
-            chain = LLMChain(llm=self.llm, prompt=prompt)
-            
             try:
-                response = chain.invoke({"document": document_text})
-                result = response['text'].strip()
+                prompt = ChatPromptTemplate.from_template(prompt_template)
+                chain = prompt | self.llm
                 
-                if result.lower() == "none found":
+                response = chain.invoke({"document": document_text})
+                result = response.content.strip()
+                
+                if result.lower() == "none found" or not result:
                     return []
                 return [name.strip() for name in result.split(',')]
             except Exception as e:
-                print(f"Error extracting financial access: {e}")
+                print(f"ERROR extracting financial access: {e}")
                 return []
         else:
             # Dummy mode
@@ -234,21 +227,18 @@ Provide your answer as a comma-separated list of names only. If no one is mentio
 Names who conducted unauthorized experiments:"""
 
         if self.llm:
-            prompt = PromptTemplate(
-                input_variables=["document"],
-                template=prompt_template
-            )
-            chain = LLMChain(llm=self.llm, prompt=prompt)
-            
             try:
-                response = chain.invoke({"document": document_text})
-                result = response['text'].strip()
+                prompt = ChatPromptTemplate.from_template(prompt_template)
+                chain = prompt | self.llm
                 
-                if result.lower() == "none found":
+                response = chain.invoke({"document": document_text})
+                result = response.content.strip()
+                
+                if result.lower() == "none found" or not result:
                     return []
                 return [name.strip() for name in result.split(',')]
             except Exception as e:
-                print(f"Error extracting unauthorized experiments: {e}")
+                print(f"ERROR extracting unauthorized experiments: {e}")
                 return []
         else:
             # Dummy mode

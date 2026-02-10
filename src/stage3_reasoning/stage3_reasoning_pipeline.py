@@ -12,16 +12,10 @@ Competition Requirements:
 import os
 import json
 from typing import List, Dict, Optional
+import time
 from langchain_groq import ChatGroq
-try:
-    from langchain_classic.chains import LLMChain, SequentialChain
-    from langchain_core.prompts import PromptTemplate
-    from langchain_core.documents import Document
-except ImportError:
-    LLMChain = None
-    SequentialChain = None
-    PromptTemplate = None
-    Document = None
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.documents import Document
 
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -42,11 +36,18 @@ class CaseReasoningPipeline:
         
         # Initialize LLM
         if self.api_key and self.api_key != "dummy_key_for_testing":
-            self.llm = ChatGroq(
-                model=Config.GROQ_MODEL,
-                temperature=Config.TEMPERATURE,
-                groq_api_key=self.api_key
-            )
+            try:
+                self.llm = ChatGroq(
+                    model=Config.GROQ_MODEL,
+                    temperature=Config.TEMPERATURE,
+                    groq_api_key=self.api_key,
+                    timeout=30.0,
+                    max_retries=2
+                )
+                print(f"✓ Reasoning pipeline LLM initialized: {Config.GROQ_MODEL}")
+            except Exception as e:
+                print(f"ERROR initializing LLM: {e}")
+                self.llm = None
         else:
             self.llm = None
             print("WARNING: Running in dummy mode. Set GROQ_API_KEY for actual LLM processing.")
@@ -114,15 +115,12 @@ Format your response as a numbered list.
 Potential Suspects:"""
 
         if self.llm:
-            prompt = PromptTemplate(
-                input_variables=["evidence"],
-                template=prompt_template
-            )
-            chain = LLMChain(llm=self.llm, prompt=prompt, output_key="suspects")
+            prompt = ChatPromptTemplate.from_template(prompt_template)
+            chain = prompt | self.llm
             
             try:
                 response = chain.invoke({"evidence": evidence})
-                return response['suspects'].strip()
+                return response.content.strip()
             except Exception as e:
                 print(f"Error identifying suspects: {e}")
                 return "Error in suspect identification"
@@ -157,15 +155,12 @@ Rank motives from STRONGEST to WEAKEST.
 Motive Analysis:"""
 
         if self.llm:
-            prompt = PromptTemplate(
-                input_variables=["evidence", "suspects"],
-                template=prompt_template
-            )
-            chain = LLMChain(llm=self.llm, prompt=prompt, output_key="motives")
+            prompt = ChatPromptTemplate.from_template(prompt_template)
+            chain = prompt | self.llm
             
             try:
                 response = chain.invoke({"evidence": evidence, "suspects": suspects})
-                return response['motives'].strip()
+                return response.content.strip()
             except Exception as e:
                 print(f"Error analyzing motives: {e}")
                 return "Error in motive analysis"
@@ -198,15 +193,12 @@ Rank by STRONGEST to WEAKEST opportunity.
 Opportunity Analysis:"""
 
         if self.llm:
-            prompt = PromptTemplate(
-                input_variables=["evidence", "suspects"],
-                template=prompt_template
-            )
-            chain = LLMChain(llm=self.llm, prompt=prompt, output_key="opportunity")
+            prompt = ChatPromptTemplate.from_template(prompt_template)
+            chain = prompt | self.llm
             
             try:
                 response = chain.invoke({"evidence": evidence, "suspects": suspects})
-                return response['opportunity'].strip()
+                return response.content.strip()
             except Exception as e:
                 print(f"Error analyzing opportunity: {e}")
                 return "Error in opportunity analysis"
@@ -239,15 +231,12 @@ Rank by STRONGEST to WEAKEST means.
 Means Analysis:"""
 
         if self.llm:
-            prompt = PromptTemplate(
-                input_variables=["evidence", "suspects"],
-                template=prompt_template
-            )
-            chain = LLMChain(llm=self.llm, prompt=prompt, output_key="means")
+            prompt = ChatPromptTemplate.from_template(prompt_template)
+            chain = prompt | self.llm
             
             try:
                 response = chain.invoke({"evidence": evidence, "suspects": suspects})
-                return response['means'].strip()
+                return response.content.strip()
             except Exception as e:
                 print(f"Error analyzing means: {e}")
                 return "Error in means analysis"
@@ -290,11 +279,8 @@ Be definitive in your conclusion.
 Final Determination:"""
 
         if self.llm:
-            prompt = PromptTemplate(
-                input_variables=["evidence", "suspects", "motives", "opportunity", "means"],
-                template=prompt_template
-            )
-            chain = LLMChain(llm=self.llm, prompt=prompt, output_key="culprit")
+            prompt = ChatPromptTemplate.from_template(prompt_template)
+            chain = prompt | self.llm
             
             try:
                 response = chain.invoke({
@@ -304,7 +290,7 @@ Final Determination:"""
                     "opportunity": opportunity,
                     "means": means
                 })
-                return response['culprit'].strip()
+                return response.content.strip()
             except Exception as e:
                 print(f"Error determining culprit: {e}")
                 import traceback
